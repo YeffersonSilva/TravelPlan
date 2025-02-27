@@ -70,7 +70,7 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <Link href="/itinerarios/nuevo">
+              <Link href="/itinerario/nuevo">
                 <Button
                   size="lg"
                   className="text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
@@ -280,7 +280,7 @@ export default function Home() {
                   puede hacer que tu próximo viaje sea inolvidable.
                 </p>
               </div>
-              <Link href="/itinerarios/nuevo">
+              <Link href="/itinerario/nuevo">
                 <Button
                   size="lg"
                   className="mt-8 text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
