@@ -21,6 +21,9 @@ import {
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FlightSection } from "@/components/FlightSection";
+import { LodgingSection } from "@/components/LodgingSection";
+import { ActivitySection } from "@/components/ActivitySection";
+import { ItineraryMap } from "@/components/ItineraryMap";
 
 export default async function ItinerarioPage({
   params,
@@ -220,6 +223,7 @@ export default async function ItinerarioPage({
           <TabsTrigger value="vuelos">Vuelos</TabsTrigger>
           <TabsTrigger value="alojamiento">Alojamiento</TabsTrigger>
           <TabsTrigger value="actividades">Actividades</TabsTrigger>
+          <TabsTrigger value="mapa">Mapa</TabsTrigger>
         </TabsList>
 
         <TabsContent value="detalles">
@@ -254,134 +258,33 @@ export default async function ItinerarioPage({
         </TabsContent>
 
         <TabsContent value="alojamiento">
-          {itinerario.lodgings.length === 0 ? (
-            <div className="text-center py-12">
-              <h2 className="text-xl font-semibold mb-2">
-                No hay alojamientos registrados
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Añade información sobre tus alojamientos durante el viaje
-              </p>
-              {isOwner && (
-                <Button>
-                  <Pencil className="mr-2 h-4 w-4" /> Añadir Alojamiento
-                </Button>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {itinerario.lodgings.map((lodging) => (
-                <Link
-                  href={`/itinerario/${params.id}/alojamientos/${lodging.id}`}
-                  key={lodging.id}
-                  className="block"
-                >
-                  <Card className="transition-all hover:shadow-md">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold">{lodging.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {lodging.address}
-                          </p>
-                          <div className="mt-2">
-                            <p className="text-sm">
-                              Check-in:{" "}
-                              {format(lodging.checkIn, "dd MMM yyyy HH:mm", {
-                                locale: es,
-                              })}
-                            </p>
-                            <p className="text-sm">
-                              Check-out:{" "}
-                              {format(lodging.checkOut, "dd MMM yyyy HH:mm", {
-                                locale: es,
-                              })}
-                            </p>
-                          </div>
-                        </div>
-                        {lodging.price && (
-                          <p className="text-sm font-medium">
-                            {lodging.price.toLocaleString("es-ES", {
-                              style: "currency",
-                              currency: "EUR",
-                            })}
-                          </p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          )}
+          <LodgingSection
+            lodgings={itinerario.lodgings}
+            itineraryId={itinerario.id}
+            isOwner={isOwner}
+          />
         </TabsContent>
 
         <TabsContent value="actividades">
-          {itinerario.activities.length === 0 ? (
-            <div className="text-center py-12">
-              <h2 className="text-xl font-semibold mb-2">
-                No hay actividades registradas
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Añade las actividades que planeas realizar durante tu viaje
-              </p>
-              {isOwner && (
-                <Button>
-                  <Pencil className="mr-2 h-4 w-4" /> Añadir Actividad
-                </Button>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {itinerario.activities.map((activity) => (
-                <Link
-                  href={`/itinerario/${params.id}/actividades/${activity.id}`}
-                  key={activity.id}
-                  className="block"
-                >
-                  <Card className="transition-all hover:shadow-md">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold">{activity.title}</h3>
-                          {activity.description && (
-                            <p className="text-sm text-muted-foreground">
-                              {activity.description}
-                            </p>
-                          )}
-                          <div className="mt-2">
-                            <p className="text-sm">
-                              {format(activity.startTime, "dd MMM yyyy HH:mm", {
-                                locale: es,
-                              })}
-                              {activity.endTime &&
-                                ` - ${format(activity.endTime, "HH:mm", {
-                                  locale: es,
-                                })}`}
-                            </p>
-                            {activity.location && (
-                              <p className="text-sm text-muted-foreground">
-                                <MapPin className="inline-block w-3 h-3 mr-1" />
-                                {activity.location}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        {activity.price && (
-                          <p className="text-sm font-medium">
-                            {activity.price.toLocaleString("es-ES", {
-                              style: "currency",
-                              currency: "EUR",
-                            })}
-                          </p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          )}
+          <ActivitySection
+            activities={itinerario.activities}
+            itineraryId={itinerario.id}
+            isOwner={isOwner}
+          />
+        </TabsContent>
+
+        <TabsContent value="mapa">
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold">Mapa del Itinerario</h2>
+            <p className="text-muted-foreground">
+              Visualiza todas las ubicaciones de tu itinerario en un mapa
+              interactivo.
+            </p>
+            <ItineraryMap
+              activities={itinerario.activities}
+              lodgings={itinerario.lodgings}
+            />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
